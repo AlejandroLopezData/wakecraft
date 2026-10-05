@@ -1,0 +1,8 @@
+Informacion de ejecucion
+
+python -m venv .venv
+source .venv/bin/activate
+
+pip install -e ".[record,tts,dev]" # descarga todas las dependencias
+
+para grabar audio ejecutar: python -m record.recorde

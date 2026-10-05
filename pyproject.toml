@@ -6,20 +6,32 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
 keywords = ["wake-word", "hotword", "keyword-spotting", "speech", "tts", "onnx"]
+
 dependencies = [
-    "numpy",
-    "torch",
-    "torchaudio",
-    "onnx",
-    "onnxruntime",
-    "sounddevice",
-    "soundfile",
-    "typer",
+    "numpy>=2.0",
+    "torch>=2.4",
+    "torchaudio>=2.4",
+    "onnx>=1.16",
+    "onnxruntime>=1.18",
+    "typer>=0.12",
 ]
 
 [project.optional-dependencies]
-tts = ["piper-tts"]
-dev = ["pytest", "ruff"]
+record = [
+    "numpy>=2.0",
+    "scipy>=1.13",
+    "sounddevice>=0.5",
+    "soundfile>=0.12",
+]
+
+tts = [
+    "piper-tts",
+]
+
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
 
 [project.scripts]
 wakeforge = "wakeforge.cli:app"
@@ -33,4 +45,3 @@ packages = ["src/wakeforge"]
 
 [tool.ruff]
 line-length = 100
-

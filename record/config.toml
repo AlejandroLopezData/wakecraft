@@ -1,0 +1,30 @@
+# Ajustes propios del grabador (record/recorder.py).
+# El formato de audio (WAV PCM16 mono 16 kHz) NO se configura aquí:
+# vive en src/wakeforge/audio.py.
+
+[paths]
+# Relativa a la raíz del proyecto (o ruta absoluta).
+output_dir = "my_recordings"
+
+[device]
+# "default", un índice (p. ej. "2") o parte del nombre (p. ej. "USB").
+# Usa `python -m record.recorder --list-devices` para ver las opciones.
+input = "default"
+output = "default"
+
+# Límites por categoría. Una toma fuera de min_seconds genera un aviso
+# (no se descarta); max_seconds corta la captura automáticamente.
+[wake_word]
+min_seconds = 0.3
+max_seconds = 3.0
+default_takes = 50
+
+[negatives]
+min_seconds = 0.3
+max_seconds = 5.0
+default_takes = 50
+
+[noise]
+min_seconds = 5.0
+max_seconds = 600.0
+default_takes = 1
