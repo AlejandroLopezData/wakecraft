@@ -1,8 +1,17 @@
 Informacion de ejecucion
 
+[env]
 python -m venv .venv
 source .venv/bin/activate
 
+[git]
+git add .
+git commit -m "commmit"
+git push -u origin main
+
+[install dep]
 pip install -e ".[record,tts,dev]" # descarga todas las dependencias
 
-para grabar audio ejecutar: python -m record.recorde
+[execute]
+python -m record.recorder #grabar audio
+
