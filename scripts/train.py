@@ -11,12 +11,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, WeightedRandomSampler
 
-from .augment import build_specaug
-from .config import Config, TrainingCfg
-from .data import prepare_data
-from .export import export_onnx
-from .features import LogMelFrontend
-from .model import ExportModel, WakeWordNet
+from wakeforge.augment import build_specaug
+from wakeforge.config import Config, TrainingCfg
+from wakeforge.data import prepare_data
+from wakeforge.export import export_onnx
+from wakeforge.features import LogMelFrontend
+from wakeforge.model import ExportModel, WakeWordNet
 
 
 class EMA:
