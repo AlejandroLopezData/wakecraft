@@ -1,0 +1,10 @@
+mkdir -p my_recordings/wake_word my_recordings/negatives my_recordings/noise
+mkdir -p outputs
+
+mkdir -p src/wakeforge scripts tests/fixtures
+
+touch my_recordings/wake_word/.gitkeep
+touch my_recordings/negatives/.gitkeep
+touch my_recordings/noise/.gitkeep
+touch outputs/.gitkeep
+touch tests/fixtures/.gitkeep
