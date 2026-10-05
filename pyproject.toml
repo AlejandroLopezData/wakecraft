@@ -33,3 +33,4 @@ packages = ["src/wakeforge"]
 
 [tool.ruff]
 line-length = 100
+
