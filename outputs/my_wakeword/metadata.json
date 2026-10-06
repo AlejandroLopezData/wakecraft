@@ -1,0 +1,138 @@
+{
+  "name": "my_wakeword",
+  "model_file": "model.onnx",
+  "input": {
+    "name": "audio",
+    "shape": [
+      "batch",
+      "samples"
+    ],
+    "dtype": "float32",
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "sample_rate": 16000
+  },
+  "output": {
+    "name": "score",
+    "meaning": "probabilidad de wake word (0-1)"
+  },
+  "window_seconds": 1.8,
+  "window_samples": 28800,
+  "suggested_hop_seconds": 0.1,
+  "threshold": 0.5,
+  "validation": {
+    "loss": 0.0180175993591547,
+    "threshold": 0.5,
+    "frr": 0.0,
+    "fpr": 0.0,
+    "n_val_pos": 10,
+    "n_val_neg": 43,
+    "step": 400,
+    "warning": "Pocos ejemplos de validaci\u00f3n: t\u00f3malo como orientativo."
+  },
+  "onnx_max_diff": 4.0745362639427185e-08,
+  "data": {
+    "n_recordings": 49,
+    "duration_mean_s": 1.2191543367346938,
+    "duration_std_s": 0.15955210552830118,
+    "duration_min_s": 0.9583125,
+    "duration_max_s": 1.6409375,
+    "window_mode": "auto",
+    "window_seconds": 1.8,
+    "inconsistent_durations": false,
+    "files": {
+      "wake_word": 49,
+      "negatives": 50,
+      "noise": 10
+    },
+    "train_examples": {
+      "positive": 39,
+      "negative": 298
+    },
+    "val_examples": {
+      "positive": 10,
+      "negative": 43
+    },
+    "negatives_hours": 0.020681961805555555
+  },
+  "config": {
+    "project": {
+      "name": "my_wakeword",
+      "recordings_dir": "my_recordings",
+      "output_dir": "outputs"
+    },
+    "audio": {
+      "sample_rate": 16000,
+      "window_seconds": 0.0,
+      "window_margin": 0.4,
+      "window_min": 1.0,
+      "window_max": 3.0,
+      "window_percentile": 90,
+      "trim_silence": true,
+      "trim_top_db": 30.0
+    },
+    "features": {
+      "n_mels": 40,
+      "n_fft": 512,
+      "win_length": 400,
+      "hop_length": 160,
+      "f_min": 20.0,
+      "f_max": 7600.0
+    },
+    "model": {
+      "width": 64,
+      "kernel_size": 9,
+      "dilations": [
+        1,
+        2,
+        4,
+        1,
+        2,
+        4
+      ],
+      "dropout": 0.1
+    },
+    "training": {
+      "steps": 500,
+      "batch_size": 64,
+      "lr": 0.002,
+      "weight_decay": 0.01,
+      "val_fraction": 0.2,
+      "positive_ratio": 0.33,
+      "label_smoothing": 0.01,
+      "ema_decay": 0.99,
+      "eval_every": 100,
+      "max_fpr": 0.005,
+      "min_threshold": 0.5,
+      "grad_clip": 5.0,
+      "negative_stride": 0.5,
+      "seed": 0,
+      "num_workers": 0,
+      "device": "auto"
+    },
+    "augmentation": {
+      "gain_db": 6.0,
+      "noise_prob": 0.8,
+      "snr_min_db": 0.0,
+      "snr_max_db": 20.0,
+      "speed_factors": [
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1
+      ],
+      "speed_prob": 0.5,
+      "freq_mask": 6,
+      "time_mask": 15
+    },
+    "export": {
+      "filename": "model.onnx",
+      "opset": 17,
+      "verify": true
+    }
+  },
+  "torch_version": "2.14.1+cu130"
+}
