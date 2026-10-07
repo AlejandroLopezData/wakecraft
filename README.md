@@ -1,37 +1,17 @@
 # wakeforge
 
-Train your own custom wake word at home, no ML knowledge required.
+Train your own custom wake word rapidly at home.
 
-Record a few samples (or none), pick your language, and let multilingual TTS
-generate positives and *hard negatives*. wakeforge ships with negative and
-noise banks, and exports to ONNX so you can use your wake word in a few lines
-of code.
+Record a few positive, negative, and noise samples.
+Wakeforge comes with built-in noise samples and exports your trained model to ONNX, so you can start using your custom wake word in minutes.
 
-> ⚠️ Early development: the API will change.
 
 ## Why wakeforge?
 
 - **Personal by design**: trained for your voice, your mic, your room.
-- **Works with little data**: heavy augmentation + built-in negatives and noise.
-- **Multilingual**: TTS-generated positives and hard negatives in your language.
+- **Works with little data**: heavy augmentation + built-in noise.
 - **Simple API**: train and detect in a handful of lines.
 - **Portable**: exports to ONNX.
-
-## Quickstart (planned API)
-
-```python
-from wakeforge import train, Detector
-
-train(
-    wake_word="hey computer",
-    language="en",
-    recordings="my_recordings/",       # optional
-    extra_negatives="my_negatives/",   # optional
-    extra_noise="my_noise/",           # optional
-)
-
-Detector("hey_computer").listen(on_detect=lambda: print("Activated!"))
-```
 
 ## How it works
 
