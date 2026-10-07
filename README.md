@@ -1,5 +1,7 @@
 # wakeforge
 
+https://alejandrolopezdata.github.io/wakeforge/
+
 Train your own custom wake word rapidly at home.
 
 Record a few positive, negative, and noise samples.
