@@ -1,10 +1,10 @@
-# Wakeforge
+# WakeCraft
 
 **Train your own custom wake word at home — quickly, privately, and with just a few recordings.**
 
 🌐 **Documentation:** https://alejandrolopezdata.github.io/wakeforge/
 
-Wakeforge lets you train a custom wake-word detector using your own voice and microphone.
+Wakecraft lets you train a custom wake-word detector using your own voice and microphone.
 
 Record a few **positive, negative, and noise samples**, then train a lightweight model designed to work with limited data.
 

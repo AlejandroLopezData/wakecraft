@@ -24,10 +24,6 @@ record = [
     "soundfile>=0.12",
 ]
 
-tts = [
-    "piper-tts",
-]
-
 dev = [
     "pytest>=8.0",
     "ruff>=0.6",

@@ -1,15 +1,3 @@
-"""WakeForge · grabador de dataset desde terminal.
-
-Uso (desde la raíz del proyecto):
-
-    python -m record.recorder
-    python -m record.recorder --category wake_word --takes 50
-    python -m record.recorder --list-devices
-
-Guarda WAV PCM16 mono 16 kHz en ``my_recordings/<categoria>/`` sin sobrescribir
-nunca archivos existentes.
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -20,7 +8,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
-if __package__ in (None, ""):  # ejecutado como `python record/recorder.py`
+if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from record.terminal_input import read_key
 else:
@@ -28,8 +16,8 @@ else:
 
 try:
     import tomllib
-except ModuleNotFoundError:  # Python < 3.11
-    import tomli as tomllib  # type: ignore[no-redef]
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 import numpy as np
 
@@ -41,10 +29,10 @@ try:
         save_wav,
         to_target_format,
     )
-except ImportError as exc:  # pragma: no cover
+except ImportError as exc:
     raise SystemExit(
-        f"No se pudo importar 'wakeforge.audio' ({exc}).\n"
-        'Instala el proyecto desde su raíz con:  pip install -e ".[record]"'
+        f"Could not import 'wakeforge.audio' ({exc}).\n"
+        'Install the project from its root with:  pip install -e ".[record]"'
     ) from exc
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -64,11 +52,7 @@ SILENCE_PEAK_DBFS = -60.0
 CLIPPING_FRACTION = 0.001
 
 
-# --------------------------------------------------------------------------
-# Lógica pura (sin hardware): configuración, nombres, validación
-# --------------------------------------------------------------------------
 def load_config(path: str | Path | None = None) -> dict[str, dict[str, Any]]:
-    """Carga record/config.toml sobre los valores por defecto."""
     cfg = {section: dict(values) for section, values in DEFAULT_CONFIG.items()}
     cfg_path = Path(path) if path else CONFIG_PATH
     if cfg_path.is_file():
@@ -81,7 +65,6 @@ def load_config(path: str | Path | None = None) -> dict[str, dict[str, Any]]:
 
 
 def resolve_output_dir(cfg: dict, override: str | None = None) -> Path:
-    """--output-dir es relativo al directorio actual; el de config.toml, a la raíz del proyecto."""
     if override:
         return Path(override).expanduser().resolve()
     p = Path(cfg["paths"]["output_dir"]).expanduser()
@@ -89,7 +72,6 @@ def resolve_output_dir(cfg: dict, override: str | None = None) -> Path:
 
 
 def parse_device(value: Any) -> int | str | None:
-    """'default'/vacío -> None; '3' -> 3; cualquier otro texto -> nombre (subcadena)."""
     if value is None:
         return None
     if isinstance(value, int):
@@ -112,59 +94,68 @@ def count_existing(category_dir: Path, category: str) -> int:
 
 
 def next_index(category_dir: Path, category: str) -> int:
-    """Siguiente índice libre: máximo existente + 1 (empieza en 1)."""
     if not category_dir.is_dir():
         return 1
     rx = _filename_regex(category)
-    indices = [int(m.group(1)) for p in category_dir.iterdir() if (m := rx.match(p.name))]
+    indices = [
+        int(m.group(1))
+        for p in category_dir.iterdir()
+        if (m := rx.match(p.name))
+    ]
     return max(indices, default=0) + 1
 
 
 def save_take(out_dir: Path, category: str, audio: np.ndarray) -> Path:
-    """Guarda una toma (ya en formato objetivo) con el siguiente nombre libre."""
     category_dir = out_dir / category
     category_dir.mkdir(parents=True, exist_ok=True)
     idx = next_index(category_dir, category)
     for _ in range(1000):
         path = category_dir / f"{category}_{idx:04d}.wav"
         try:
-            return save_wav(path, audio, TARGET_SR)  # creación exclusiva
+            return save_wav(path, audio, TARGET_SR)
         except FileExistsError:
             idx += 1
-    raise RuntimeError(f"No se encontró un nombre libre en {category_dir}")
+    raise RuntimeError(f"No free filename found in {category_dir}")
 
 
 def check_take(stats, min_seconds: float) -> list[str]:
-    """Avisos sobre la calidad de una toma. No descarta nada."""
     warnings: list[str] = []
     if stats.duration_s < min_seconds:
-        warnings.append(f"muy corta ({stats.duration_s:.2f} s; mínimo recomendado {min_seconds:g} s)")
+        warnings.append(
+            f"too short ({stats.duration_s:.2f} s; recommended minimum {min_seconds:g} s)"
+        )
     if stats.peak_dbfs < SILENCE_PEAK_DBFS:
-        warnings.append(f"casi silencio (pico {stats.peak_dbfs:.0f} dBFS): ¿micro silenciado o mal elegido?")
+        warnings.append(
+            f"almost silent (peak {stats.peak_dbfs:.0f} dBFS): "
+            "is the microphone muted or incorrectly selected?"
+        )
     if stats.clipped_fraction > CLIPPING_FRACTION:
-        warnings.append("saturación (clipping): baja la ganancia del micro o aléjate")
+        warnings.append(
+            "clipping: lower the microphone gain or move farther away"
+        )
     return warnings
 
 
-# --------------------------------------------------------------------------
-# Audio en vivo (requiere sounddevice)
-# --------------------------------------------------------------------------
 def import_sounddevice():
     try:
         import sounddevice as sd
     except ImportError as exc:
         raise SystemExit(
-            f"No se pudo importar 'sounddevice' ({exc}).\n"
-            'Instálalo con:  pip install -e ".[record]"\n'
-            "En Linux también hace falta PortAudio:  sudo apt install libportaudio2"
+            f"Could not import 'sounddevice' ({exc}).\n"
+            'Install it with:  pip install -e ".[record]"\n'
+            "On Linux, PortAudio is also required:  sudo apt install libportaudio2"
         ) from exc
     return sd
 
 
 def resolve_input_rate(sd, device) -> int:
-    """16 kHz si el dispositivo lo admite; si no, su frecuencia nativa."""
     try:
-        sd.check_input_settings(device=device, channels=1, dtype="int16", samplerate=TARGET_SR)
+        sd.check_input_settings(
+            device=device,
+            channels=1,
+            dtype="int16",
+            samplerate=TARGET_SR,
+        )
         return TARGET_SR
     except sd.PortAudioError:
         info = sd.query_devices(device, "input")
@@ -172,8 +163,6 @@ def resolve_input_rate(sd, device) -> int:
 
 
 class MicCapture:
-    """Captura mono int16 desde el micro hasta que se llame a ``stop()``."""
-
     BAR_WIDTH = 16
 
     def __init__(self, sd, device, rate: int, max_seconds: float):
@@ -190,7 +179,6 @@ class MicCapture:
         self._thread: threading.Thread | None = None
         self._stop_evt = threading.Event()
 
-    # El callback corre en el hilo de audio de PortAudio: debe ser corto.
     def _callback(self, indata, frames, time_info, status):
         remaining = self._max_frames - self._frames
         if remaining <= 0:
@@ -201,7 +189,10 @@ class MicCapture:
         self._frames += len(block)
         if len(block) < frames:
             self._limit_hit = True
-        self._peak = max(self._peak, float(np.max(np.abs(block.astype(np.int32)))) / 32768.0)
+        self._peak = max(
+            self._peak,
+            float(np.max(np.abs(block.astype(np.int32)))) / 32768.0,
+        )
 
     def start(self) -> None:
         self._stream = self._sd.InputStream(
@@ -213,25 +204,34 @@ class MicCapture:
         )
         self._stream.start()
         self._stop_evt.clear()
-        self._thread = threading.Thread(target=self._show_progress, daemon=True)
+        self._thread = threading.Thread(
+            target=self._show_progress,
+            daemon=True,
+        )
         self._thread.start()
 
     def _show_progress(self) -> None:
         while not self._stop_evt.is_set():
             peak, self._peak = self._peak, 0.0
             db = 20.0 * math.log10(max(peak, 1e-6))
-            filled = int(max(0.0, min(1.0, (db + 60.0) / 60.0)) * self.BAR_WIDTH)
+            filled = int(
+                max(0.0, min(1.0, (db + 60.0) / 60.0)) * self.BAR_WIDTH
+            )
             bar = "#" * filled + "-" * (self.BAR_WIDTH - filled)
             elapsed = self._frames / self.rate
-            tail = "LIMITE: pulsa ENTER" if self._limit_hit else "ENTER = terminar"
+            tail = (
+                "LIMIT: press ENTER"
+                if self._limit_hit
+                else "ENTER = finish"
+            )
             sys.stdout.write(
-                f"\r   [REC] {elapsed:6.1f}s/{self.max_seconds:g}s [{bar}] {db:6.1f} dBFS  {tail}   "
+                f"\r   [REC] {elapsed:6.1f}s/{self.max_seconds:g}s "
+                f"[{bar}] {db:6.1f} dBFS  {tail}   "
             )
             sys.stdout.flush()
             self._stop_evt.wait(0.1)
 
     def stop(self) -> np.ndarray:
-        """Detiene la captura y devuelve el audio a la frecuencia de captura."""
         if self._stream is not None:
             try:
                 self._stream.stop()
@@ -250,22 +250,22 @@ class MicCapture:
 
 
 def play_audio(sd, audio: np.ndarray, sr: int, device) -> None:
-    """Reproduce audio y espera. Ctrl+C corta la reproducción sin salir del programa."""
     try:
         try:
             sd.play(audio, sr, device=device)
         except sd.PortAudioError:
             info = sd.query_devices(device, "output")
             native = int(info["default_samplerate"])
-            sd.play(resample(audio, sr, native), native, device=device)
+            sd.play(
+                resample(audio, sr, native),
+                native,
+                device=device,
+            )
         sd.wait()
     except KeyboardInterrupt:
         sd.stop()
 
 
-# --------------------------------------------------------------------------
-# Sesión interactiva
-# --------------------------------------------------------------------------
 def wait_key(valid: set[str]) -> str:
     while True:
         key = read_key()
@@ -281,44 +281,54 @@ def run_session(sd, cfg, category, takes, out_dir, in_dev, out_dev) -> int:
     try:
         rate = resolve_input_rate(sd, in_dev)
         dev_name = sd.query_devices(in_dev, "input")["name"]
-    except Exception as exc:  # noqa: BLE001 - PortAudioError, ValueError...
-        print(f"No se pudo acceder al micrófono: {exc}")
-        print("Usa --list-devices para ver los dispositivos disponibles.")
+    except Exception as exc:
+        print(f"Could not access the microphone: {exc}")
+        print("Use --list-devices to see the available devices.")
         return 1
 
     category_dir = out_dir / category
     category_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\nCategoría : {category}")
-    print(f"Carpeta   : {category_dir}")
-    print(f"Micrófono : {dev_name}")
+    print(f"\nCategory : {category}")
+    print(f"Folder   : {category_dir}")
+    print(f"Microphone: {dev_name}")
     if rate != TARGET_SR:
-        print(f"            (captura a {rate} Hz; se convierte a {TARGET_SR} Hz al guardar)")
-    print(f"Formato   : WAV PCM16 mono {TARGET_SR} Hz | duración máx. por toma: {max_s:g} s")
+        print(
+            f"            (capturing at {rate} Hz; "
+            f"converted to {TARGET_SR} Hz when saving)"
+        )
+    print(
+        f"Format   : WAV PCM16 mono {TARGET_SR} Hz | "
+        f"maximum duration per take: {max_s:g} s"
+    )
 
     done = 0
     last_audio: np.ndarray | None = None
 
     while done < takes:
         total = count_existing(category_dir, category)
-        print(f"\n[{done + 1}/{takes}] {category}   (archivos en carpeta: {total})")
-        print("   ENTER = empezar   Q = salir")
+        print(
+            f"\n[{done + 1}/{takes}] {category}   "
+            f"(files in folder: {total})"
+        )
+        print("   ENTER = start   Q = quit")
         if wait_key({"enter", "q"}) == "q":
             break
 
         capture = MicCapture(sd, in_dev, rate, max_s)
         try:
             capture.start()
-        except Exception as exc:  # noqa: BLE001
-            print(f"No se pudo iniciar la grabación: {exc}")
+        except Exception as exc:
+            print(f"Could not start recording: {exc}")
             return 1
+
         try:
             wait_key({"enter"})
         finally:
-            raw = capture.stop()  # también se ejecuta con Ctrl+C
+            raw = capture.stop()
 
         if raw.size == 0:
-            print("   No se capturó audio; inténtalo de nuevo.")
+            print("   No audio was captured; try again.")
             continue
 
         audio = to_target_format(raw, rate)
@@ -327,80 +337,137 @@ def run_session(sd, cfg, category, takes, out_dir, in_dev, out_dev) -> int:
         done += 1
         last_audio = audio
 
-        print(f"   guardado {path.name}  ({stats.duration_s:.1f} s, pico {stats.peak_dbfs:.1f} dBFS)")
+        print(
+            f"   saved {path.name}  "
+            f"({stats.duration_s:.1f} s, peak {stats.peak_dbfs:.1f} dBFS)"
+        )
+
         for warning in check_take(stats, min_s):
-            print(f"   ! {warning}  -> pulsa R para repetir")
+            print(f"   ! {warning}  -> press R to retake")
 
         quit_now = False
+
         while True:
-            next_label = "terminar" if done >= takes else "siguiente"
-            print(f"   [ENTER] {next_label}  [R] repetir  [P] reproducir  [Q] salir")
+            next_label = "finish" if done >= takes else "next"
+            print(
+                f"   [ENTER] {next_label}  "
+                f"[R] retake  [P] play  [Q] quit"
+            )
+
             key = wait_key({"enter", "r", "p", "q"})
+
             if key == "enter":
                 break
+
             if key == "p":
                 play_audio(sd, last_audio, TARGET_SR, out_dev)
+
             elif key == "r":
-                path.unlink(missing_ok=True)  # solo la toma que creó esta sesión
-                print(f"   borrado {path.name}; se repite la toma")
+                path.unlink(missing_ok=True)
+                print(f"   deleted {path.name}; recording again")
                 done -= 1
                 last_audio = None
                 break
+
             elif key == "q":
                 quit_now = True
                 break
+
         if quit_now:
             break
 
-    print(f"\nSesión terminada: {done} toma(s) guardada(s) en {category_dir}")
+    print(
+        f"\nSession finished: {done} take(s) saved in {category_dir}"
+    )
     return 0
 
 
-# --------------------------------------------------------------------------
-# CLI
-# --------------------------------------------------------------------------
 def ask_category() -> str:
-    print("¿Qué quieres grabar?")
+    print("What do you want to record?")
+
     for i, name in enumerate(CATEGORIES, 1):
         print(f"  {i}) {name}")
+
     while True:
-        raw = input("Elige 1-3 o escribe el nombre: ").strip().lower()
+        raw = input("Choose 1-3 or enter the name: ").strip().lower()
+
         if raw.isdigit() and 1 <= int(raw) <= len(CATEGORIES):
             return CATEGORIES[int(raw) - 1]
+
         if raw in CATEGORIES:
             return raw
-        print("Opción no válida.")
+
+        print("Invalid option.")
 
 
 def ask_takes(default: int) -> int:
     while True:
-        raw = input(f"¿Cuántas tomas? [{default}]: ").strip()
+        raw = input(f"How many takes? [{default}]: ").strip()
+
         if not raw:
             return default
+
         if raw.isdigit() and int(raw) > 0:
             return int(raw)
-        print("Introduce un número entero mayor que 0.")
+
+        print("Enter an integer greater than 0.")
 
 
 def positive_int(value: str) -> int:
     n = int(value)
+
     if n <= 0:
-        raise argparse.ArgumentTypeError("debe ser mayor que 0")
+        raise argparse.ArgumentTypeError("must be greater than 0")
+
     return n
 
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="python -m record.recorder",
-        description="Graba el dataset de WakeForge desde el terminal.",
+        description="Record the WakeForge dataset from the terminal.",
     )
-    p.add_argument("-c", "--category", choices=CATEGORIES, help="tipo de audio a grabar")
-    p.add_argument("-n", "--takes", type=positive_int, help="número de tomas de la sesión")
-    p.add_argument("--config", help=f"ruta a un config.toml (por defecto {CONFIG_PATH})")
-    p.add_argument("--output-dir", help="carpeta de salida (por defecto, la de config.toml)")
-    p.add_argument("--input-device", help="índice o nombre del micrófono")
-    p.add_argument("--output-device", help="índice o nombre del altavoz")
-    p.add_argument("--list-devices", action="store_true", help="lista los dispositivos de audio y sale")
+
+    p.add_argument(
+        "-c",
+        "--category",
+        choices=CATEGORIES,
+        help="type of audio to record",
+    )
+
+    p.add_argument(
+        "-n",
+        "--takes",
+        type=positive_int,
+        help="number of takes in the session",
+    )
+
+    p.add_argument(
+        "--config",
+        help=f"path to a config.toml file (default: {CONFIG_PATH})",
+    )
+
+    p.add_argument(
+        "--output-dir",
+        help="output folder (default: the one from config.toml)",
+    )
+
+    p.add_argument(
+        "--input-device",
+        help="microphone index or name",
+    )
+
+    p.add_argument(
+        "--output-device",
+        help="speaker index or name",
+    )
+
+    p.add_argument(
+        "--list-devices",
+        action="store_true",
+        help="list audio devices and exit",
+    )
+
     return p
 
 
@@ -413,17 +480,39 @@ def main(argv: list[str] | None = None) -> int:
         print(sd.query_devices())
         return 0
 
-    in_dev = parse_device(args.input_device if args.input_device is not None else cfg["device"]["input"])
-    out_dev = parse_device(args.output_device if args.output_device is not None else cfg["device"]["output"])
+    in_dev = parse_device(
+        args.input_device
+        if args.input_device is not None
+        else cfg["device"]["input"]
+    )
+
+    out_dev = parse_device(
+        args.output_device
+        if args.output_device is not None
+        else cfg["device"]["output"]
+    )
+
     out_dir = resolve_output_dir(cfg, args.output_dir)
 
     try:
         category = args.category or ask_category()
-        takes = args.takes or ask_takes(int(cfg[category].get("default_takes", 50)))
-        return run_session(sd, cfg, category, takes, out_dir, in_dev, out_dev)
+        takes = args.takes or ask_takes(
+            int(cfg[category].get("default_takes", 50))
+        )
+        return run_session(
+            sd,
+            cfg,
+            category,
+            takes,
+            out_dir,
+            in_dev,
+            out_dev,
+        )
+
     except (KeyboardInterrupt, EOFError):
-        print("\nInterrumpido. Las tomas ya guardadas se conservan.")
+        print("\nInterrupted. Already saved takes are preserved.")
         return 130
+
     finally:
         sd.stop()
 
