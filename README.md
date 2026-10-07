@@ -1,51 +1,97 @@
-# wakeforge
+# Wakeforge
 
-https://alejandrolopezdata.github.io/wakeforge/
+**Train your own custom wake word at home — quickly, privately, and with just a few recordings.**
 
-Train your own custom wake word rapidly at home.
+🌐 **Demo:** https://alejandrolopezdata.github.io/wakeforge/
 
-Record a few positive, negative, and noise samples.
-Wakeforge comes with built-in noise samples and exports your trained model to ONNX, so you can start using your custom wake word in minutes.
+Wakeforge lets you train a custom wake-word detector using your own voice and microphone.
 
+Record a few **positive, negative, and noise samples**, then train a lightweight model designed to work with limited data.
 
-## Why wakeforge?
+Wakeforge includes built-in noise samples and exports your trained model to **ONNX**, so you can go from recording to a working custom wake word in minutes.
 
-- **Personal by design**: trained for your voice, your mic, your room.
-- **Works with little data**: heavy augmentation + built-in noise.
-- **Simple API**: train and detect in a handful of lines.
-- **Portable**: exports to ONNX.
+## ✨ Why Wakeforge?
 
-## How it works
+* **🎙️ Personal by design** — trained for your voice, microphone, and environment.
+* **📊 Works with little data** — heavy augmentation and built-in noise make small datasets useful.
+* **⚡ Simple API** — train and detect a wake word with just a few lines of code.
+* **📦 Portable** — export your trained model to ONNX and use it wherever you need.
 
-1. **Positives**: your recordings + TTS-generated voices, with augmentation
-   (noise, reverb, speed, pitch, gain).
-2. **Negatives**: built-in bank + your own + automatically generated hard negatives.
-3. **Noise**: built-in bank + your own, mixed into everything.
-4. **Model**: a small CNN over mel-spectrograms, trained on CPU in minutes.
-5. **Detection**: streaming sliding window with smoothing and a calibrated threshold.
+## 🔧 How it works
 
-Real recordings are weighted higher than synthetic ones. For best results,
-record at least 10-20 samples yourself.
+Wakeforge uses a simple pipeline to turn a few recordings into a practical wake-word detector.
 
-## Improving quality
+### 1. Positive samples
 
-Add more voices (friends, family, TTS voices), more negatives (normal speech,
-TV, music, similar-sounding words) and noise from your own environment.
+Your recordings are combined with TTS-generated voices and augmented using:
 
-## Roadmap
+* Noise
+* Reverb
+* Speed changes
+* Pitch changes
+* Gain variations
 
-- [ ] Guided recording tool
-- [ ] Data pipeline and augmentation
-- [ ] Small model and training loop
-- [ ] Streaming detector
-- [ ] TTS backends (Piper first)
-- [ ] Hard negative generation
-- [ ] Negative/noise dataset download scripts
-- [ ] Threshold calibration and false-positives-per-hour evaluation
-- [ ] ONNX export and docs
+### 2. Negative samples
 
-## Licenses
+The training pipeline combines:
 
-Code: Apache-2.0. Datasets and TTS voices have their own licenses, so check
-them before redistributing models or using them commercially.
-Details in `docs/licenses.md` (coming soon).
+* Built-in negative samples
+* Your own recordings
+* Automatically generated **hard negatives**
+
+### 3. Noise
+
+Built-in environmental noise and your own recordings are mixed into the dataset to make the model more robust to real-world conditions.
+
+### 4. Model
+
+Wakeforge uses a **small CNN operating on mel-spectrograms**, designed to train on a CPU in just a few minutes.
+
+### 5. Detection
+
+The trained model runs using a **streaming sliding window**, with smoothing and a calibrated detection threshold to reduce false positives.
+
+> Real recordings are weighted more heavily than synthetic samples.
+>
+> **For the best results, record at least 10–20 samples of your own voice.**
+
+## 🎯 Improving quality
+
+The more realistic and diverse your dataset is, the better the detector can perform.
+
+Consider adding:
+
+* Different voices from friends or family
+* Multiple TTS voices
+* More negative speech samples
+* TV and music
+* Similar-sounding words
+* Background noise from your actual environment
+
+The goal is to make the training data resemble the situations where you will actually use the wake word.
+
+## 🗺️ Roadmap
+
+* [ ] Guided recording tool
+* [ ] Data pipeline and augmentation
+* [ ] Small model and training loop
+* [ ] Streaming detector
+* [ ] TTS backends — Piper first
+* [ ] Hard negative generation
+* [ ] Negative/noise dataset download scripts
+* [ ] Threshold calibration
+* [ ] False-positives-per-hour evaluation
+* [ ] ONNX export
+* [ ] Documentation
+
+## 📄 License
+
+**Code:** Apache-2.0
+
+Datasets and TTS voices may have their own licenses. Check the applicable licenses before redistributing models or using them commercially.
+
+License details will be available in:
+
+`docs/licenses.md`
+
+*(Coming soon.)*
