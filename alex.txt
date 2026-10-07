@@ -15,3 +15,6 @@ pip install -e ".[record,tts,dev]" # descarga todas las dependencias
 [execute]
 python -m record.recorder #grabar audio
 
+[testonnx]
+pip install onnxruntime sounddevice numpy
+python test_onnx.py
