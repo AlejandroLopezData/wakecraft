@@ -8,6 +8,7 @@ source .venv/bin/activate
 git add .
 git commit -m "commmit"
 git push -u origin main
+git push origin HEAD:refs/heads/main
 
 [install dep]
 pip install -e ".[record,tts,dev]" # descarga todas las dependencias
