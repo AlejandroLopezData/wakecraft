@@ -2,7 +2,7 @@
 
 # WakeTorch
 
-**Wake word training; train a personal wake word model in minutes, in any language.**
+### Train your own wake word model in minutes — in any language.
 
 Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export  
 Open source · Local · Lightweight
