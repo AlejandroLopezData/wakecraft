@@ -1,14 +1,16 @@
 # WakeTorch
 
-**Train your own custom wake word at home — quickly, privately, and with just a few recordings.**
+**Wake word training; train a personal wake word model in minutes, in any language.**
 
-🌐 **Documentation:** https://alejandrolopezdata.github.io/waketorch/
+Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export  
+Open source · Local · Lightweight
 
-Wakecraft lets you train a custom wake-word detector using your own voice and microphone.
+**Python · ONNX · macOS · Windows · Linux · Raspberry Pi**  
+**License: MIT · Status: early development**
 
-Record a few **positive, negative, and noise samples**, then train a lightweight model designed to work with limited data.
+**Any language. Your voice. Your wake word.**
 
-Wakeforge includes built-in noise samples and exports your trained model to **ONNX**, so you can go from recording to a working custom wake word in minutes.
+[Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
 
 ## ✨ Why Wakeforge?
 
