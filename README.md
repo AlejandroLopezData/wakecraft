@@ -15,11 +15,6 @@ Open source · Local · Lightweight
 
 </div>
 
-**Any language. Your voice. Your wake word.**
-
-[📚 Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
-
-</div>
 
 ## ✨ Why Wakeforge?
 
