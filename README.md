@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔥 WakeTorch
+# WakeTorch
 
 ### Wake word training; train a personal wake word model in minutes, in any language.
 
