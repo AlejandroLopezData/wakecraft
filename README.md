@@ -16,7 +16,7 @@ Open source · Local · Lightweight
 </div>
 
 
-## ✨ Why WakeTorch?
+## Why WakeTorch?
 
 > **You shouldn't need a huge dataset, a GPU, or a PhD to train a wake word.**
 
