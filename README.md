@@ -1,16 +1,32 @@
-# WakeTorch
+<div align="center">
 
-**Wake word training; train a personal wake word model in minutes, in any language.**
+# 🔥 WakeTorch
 
-Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export  
-Open source · Local · Lightweight
+### Wake word training; train a personal wake word model in minutes, in any language.
 
-**Python · ONNX · macOS · Windows · Linux · Raspberry Pi**  
-**License: MIT · Status: early development**
+**Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export**
+
+**Open source · Local · Lightweight**
+
+<br>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![ONNX](https://img.shields.io/badge/ONNX-005CED?style=for-the-badge&logo=onnx&logoColor=white)
+![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white)
+
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Early%20Alpha-orange?style=for-the-badge)
+
+<br>
 
 **Any language. Your voice. Your wake word.**
 
-[Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
+[📚 Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
+
+</div>
 
 ## ✨ Why Wakeforge?
 
