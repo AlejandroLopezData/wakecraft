@@ -1,4 +1,4 @@
-# WakeCraft
+# WakeTorch
 
 **Train your own custom wake word at home — quickly, privately, and with just a few recordings.**
 
