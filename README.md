@@ -11,7 +11,7 @@ Open source · Local · Lightweight
 
 **Any language. Your voice. Your wake word.**
 
-[📚 Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
+[Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
 
 </div>
 
