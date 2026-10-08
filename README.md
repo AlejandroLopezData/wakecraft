@@ -1,26 +1,21 @@
 <div align="center">
 
-# WakeTorch
+# 🔥 WakeTorch
 
-### Wake word training; train a personal wake word model in minutes, in any language.
+**Wake word training; train a personal wake word model in minutes, in any language.**
 
-**Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export**
+Guided CLI · Real voice samples · Fast training · CPU inference · ONNX export  
+Open source · Local · Lightweight
 
-**Open source · Local · Lightweight**
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) ![ONNX](https://img.shields.io/badge/ONNX-005CED?style=flat&logo=onnx&logoColor=white) ![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D4?style=flat&logo=windows&logoColor=white) ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black) ![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-C51A4A?style=flat&logo=raspberrypi&logoColor=white)
 
-<br>
+![License](https://img.shields.io/badge/License-MIT-green?style=flat) ![Status](https://img.shields.io/badge/Status-Early%20Alpha-orange?style=flat)
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![ONNX](https://img.shields.io/badge/ONNX-005CED?style=for-the-badge&logo=onnx&logoColor=white)
-![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)
-![Windows](https://img.shields.io/badge/Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white)
+**Any language. Your voice. Your wake word.**
 
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Early%20Alpha-orange?style=for-the-badge)
+[📚 Model & Documentation](https://alejandrolopezdata.github.io/waketorch/)
 
-<br>
+</div>
 
 **Any language. Your voice. Your wake word.**
 
