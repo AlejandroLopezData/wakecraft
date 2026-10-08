@@ -2,7 +2,7 @@
 
 **Train your own custom wake word at home — quickly, privately, and with just a few recordings.**
 
-🌐 **Documentation:** https://alejandrolopezdata.github.io/wakeforge/
+🌐 **Documentation:** https://alejandrolopezdata.github.io/waketorch/
 
 Wakecraft lets you train a custom wake-word detector using your own voice and microphone.
 
